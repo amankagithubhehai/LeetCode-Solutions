@@ -7,11 +7,11 @@ public:
             cnt+=garbage[i].size();
             for(int j=0;j<garbage[i].size();j++){
                
-               if(garbage[i][j]=='G')  g=max(g,i);
-               else if(garbage[i][j]=='M')  m=max(m,i);
-               else if(garbage[i][j]=='P')  p=max(p,i);
+               if(garbage[i][j]=='G')  g=i;
+               else if(garbage[i][j]=='M')  m=i;
+               else if(garbage[i][j]=='P')  p=i;
             }
-            a=max({p,m,g});
+          
         }
       
       for (int i = 0; i < travel.size(); i++) {
