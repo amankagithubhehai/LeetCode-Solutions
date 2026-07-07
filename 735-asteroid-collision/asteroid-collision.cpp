@@ -15,12 +15,13 @@ public:
                 }
             }
         }
-        vector<int>v;
-        while(!st.empty()){
-            v.push_back(st.top());
+          vector<int> ans(st.size());
+
+        for (int i = st.size() - 1; i >= 0; i--) {
+            ans[i] = st.top();
             st.pop();
         }
-        reverse(v.begin(),v.end());
-        return v;
+
+        return ans;
     }
 };
