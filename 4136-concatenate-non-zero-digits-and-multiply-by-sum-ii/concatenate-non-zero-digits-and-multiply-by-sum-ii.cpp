@@ -1,59 +1,53 @@
 class Solution {
 public:
-    vector<int> sumAndMultiply(string s, vector<vector<int>>& queries) {
+    vector<int> sumAndMultiply(string s, vector<vector<int>>& q) {
+        const int mod = 1000000007;
+        int n = s.length();
 
-        const long long MOD = 1e9 + 7;
+        vector<int> pfString(n);   // stores number modulo mod
+        vector<int> pfLen(n);      // stores number of non-zero digits
+        vector<int> pfSum(n);
+        vector<long long> pow10(n + 1);
+        pow10[0] = 1;
 
-        vector<int> pos;
-        vector<int> digit;
+        for (int i = 1; i <= n; i++) {
+            pow10[i] = (pow10[i - 1] * 10) % mod;
+        }
+        long long curr = 0;
+        int len = 0;
+        int sum = 0;
 
-        for (int i = 0; i < s.size(); i++) {
+        for (int i = 0; i < n; i++) {
+            sum = (sum + (s[i] - '0')) % mod;
+
             if (s[i] != '0') {
-                pos.push_back(i);
-                digit.push_back(s[i] - '0');
-            }
-        }
-
-        int m = digit.size();
-
-        vector<long long> prefSum(m + 1, 0);
-        vector<long long> prefNum(m + 1, 0);
-        vector<long long> pow10(m + 1, 1);
-
-        for (int i = 0; i < m; i++) {
-            prefSum[i + 1] = prefSum[i] + digit[i];
-            prefNum[i + 1] = (prefNum[i] * 10 + digit[i]) % MOD;
-        }
-
-        for (int i = 1; i <= m; i++) {
-            pow10[i] = (pow10[i - 1] * 10) % MOD;
-        }
-
-        vector<int> ans;
-
-        for (auto &q : queries) {
-
-            int l = q[0];
-            int r = q[1];
-
-            int L = lower_bound(pos.begin(), pos.end(), l) - pos.begin();
-            int R = upper_bound(pos.begin(), pos.end(), r) - pos.begin() - 1;
-
-            if (L > R) {
-                ans.push_back(0);
-                continue;
+                curr = (curr * 10 + (s[i] - '0')) % mod;
+                len++;
             }
 
-            long long sum = prefSum[R + 1] - prefSum[L];
+            pfString[i] = curr;
+            pfLen[i] = len;
+            pfSum[i] = sum;
+        }
 
-            int len = R - L + 1;
+        vector<int> ans(q.size());
 
-            long long num =
-                (prefNum[R + 1] -
-                 (prefNum[L] * pow10[len]) % MOD +
-                 MOD) % MOD;
+        for (int i = 0; i < q.size(); i++) {
+            int l = q[i][0];
+            int r = q[i][1];
 
-            ans.push_back((num * (sum % MOD)) % MOD);
+            if (l == 0) {
+                ans[i] = (1LL * pfString[r] * pfSum[r]) % mod;
+            } else {
+                int digits = pfLen[r] - pfLen[l - 1];
+
+                long long p = pow10[digits];
+                long long num =
+                    (pfString[r] - (p * pfString[l - 1]) % mod + mod) % mod;
+
+                ans[i] =
+                    (1LL * num * ((pfSum[r] - pfSum[l - 1] + mod) % mod)) % mod;
+            }
         }
 
         return ans;
