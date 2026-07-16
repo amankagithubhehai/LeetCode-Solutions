@@ -10,7 +10,7 @@ public:
                 if(nums[l]==0) cnt--;
                 l++;
             }
-            if(cnt<=k)  mx=max(mx,r-l+1);
+            mx=max(mx,r-l+1);
             r++;
         }
         
