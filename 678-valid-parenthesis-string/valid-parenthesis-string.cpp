@@ -1,38 +1,30 @@
 class Solution {
 public:
-    unordered_map<string, bool> dp;
+    bool checkValidString(string s) {
+        int low=0,high=0;
 
-    bool helper(string& s, int i, int open) {
-        if (open < 0)
-            return false;
+    for(char c:s){
 
-        if (i == s.length())
-            return open == 0;
-
-        string key = to_string(i) + "_" + to_string(open);
-
-        if (dp.find(key) != dp.end())
-            return dp[key];
-
-        bool ans;
-
-        if (s[i] == '(') {
-            ans = helper(s, i + 1, open + 1);
-        } 
-        else if (s[i] == ')') {
-            ans = helper(s, i + 1, open - 1);
-        } 
-        else {
-            ans = helper(s, i + 1, open) ||        // '* = empty'
-                  helper(s, i + 1, open + 1) ||   // '* = '('
-                  helper(s, i + 1, open - 1);     // '* = ')'
+        if(c=='('){
+            low++;
+            high++;
+        }
+        else if(c==')'){
+            low--;
+            high--;
+        }
+        else{
+            low--;
+            high++;
         }
 
-        return dp[key] = ans;
+        if(high<0)
+            return false;
+
+        if(low<0)
+            low=0;
     }
 
-    bool checkValidString(string s) {
-        dp.clear();
-        return helper(s, 0, 0);
+    return low==0;
     }
 };
