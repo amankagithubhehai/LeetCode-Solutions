@@ -18,7 +18,7 @@ public:
         }
 
         int total = 0;
-        for (int x : candies) {
+        for (auto& x : candies) {
             total += x;
         }
 
